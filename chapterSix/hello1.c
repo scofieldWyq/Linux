@@ -2,6 +2,8 @@
  * hello1.c
  * purpose	show the minimal calls needed to use curses
  * outline	initialize, draw stuff, wait for input, quit
+ *
+ * when complie, you should add lib -lcurses.
  */
 
 #include <stdio.h>
