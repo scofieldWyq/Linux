@@ -1,10 +1,18 @@
-/* execute.c - code used by small shell to execute commands */
+
+
+/* 
+ * execute.c - code used by small shell to execute commands 
+ *
+ * action: execute the command line.
+ *
+ * */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>
+#include "smsh.h"
 
 int execute( char *argv[])
 /*
@@ -22,19 +30,18 @@ int execute( char *argv[])
 
 	if( (pid = fork()) == -1)
 		perror("fork");
-	else if( pid == 0){
+	else if( pid == 0){/* in child space */
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		execvp(argv[0], argv);
-		perror("Cannot execute command");
+		execvp(argv[0], argv);/* execute the command line by child */
+
+		perror("Cannot execute command");/* if command error, will run this step */
 		exit(1);
 	}
-	else{
+	else{/* waiting for child end */
 		if( wait(&child_info) == -1)
 			perror("wait");
 	}
 
 	return child_info;
 }
-
-

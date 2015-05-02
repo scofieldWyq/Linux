@@ -1,8 +1,11 @@
+
 /*
  * splitline.c - command reading and parsing functions for smsh
  *
  * char *next_cmd( char *prompt, FILE *fp) - get next command
+ *
  * char **splitline(char *str); - parse a string
+ *
  */
 
 #include <stdio.h>
@@ -13,21 +16,27 @@
 char *next_cmd( char *prompt, FILE *fp)
 /*
  * purpose: read next command line from fp
+ *
  * returns: dynamically allocated string holding command line
+ *
  * errors: NULL at EOF( not really an error)
  * 		calls fatal from emalloc()
+ *
  * notes: allocates space in BUFSIZ chunks.
+ *
  */
 {
-	char *buf;	/* the buffer */
+	char *buf;		/* the buffer */
 	int bufspace = 0;	/* total size */
 	int pos = 0;		/* current position */
 	int c;			/* input char */
 
 	printf("%s", prompt);
+
 	while( (c = getc(fp)) != EOF){
 
 		/* need space ? */
+		/* need more space ? */
 		if( pos + 1 >= bufspace){	/* 1 for \0 */
 			if( bufspace == 0)	/* y: 1st time */
 				buf = emalloc(BUFSIZ);
@@ -48,7 +57,8 @@ char *next_cmd( char *prompt, FILE *fp)
 	if( c == EOF && pos == 0)
 		return NULL;
 	buf[pos] = '\0';
-	return buf;
+
+	return buf;/* return the line of input */
 }
 
 /*
@@ -57,7 +67,7 @@ char *next_cmd( char *prompt, FILE *fp)
 
 #define is_delim(x) ((x) == ' ' || (x) == '\t' )
 
-char **splitline(char *line);
+char **splitline(char *line)
 /*
  * purpose: split a line into array of while - space separated tokens
  * returns: a NULL - terminated array of pointers to copies of the
@@ -68,11 +78,14 @@ char **splitline(char *line);
  */
 {
 	char *newstr();
-	char **args;
-	int spots = 0;	/* spots in table */
+	char **args;		/* save the splited string */
+
+	int spots = 0;		/* spots in table */
 	int bufspace = 0;	/* bytes in table */
-	int argnum = 0;	/* slots used */
+	int argnum = 0;		/* slots used */
+
 	char *cp = line;	/* pos in string */
+
 	char *start;
 	int len;
 
@@ -80,30 +93,38 @@ char **splitline(char *line);
 		return NULL;
 
 	args = emalloc(BUFSIZ); /* initailize array */
+
 	bufspace = BUFSIZ;
+
 	spots = BUFSIZ/sizeof(char *);
 
 	while( *cp != '\0')
 	{
 		while( is_delim( *cp))	/* skip leading spaces */
 			cp++;
-		if( *cp == "\0")	/* quit at end-o-strng */
+
+		if( *cp == '\0')	/* quit at end-o-strng */
 			break;
 
 		/* make sure the array has room ( +1 for NULL )*/
+		/* alloc an memory to save the strings in args */
 		if( argnum +1 >= spots){
 			args = erealloc( args, bufspace + BUFSIZ);
 			bufspace += BUFSIZ;
 			spots += (BUFSIZ/sizeof(char *));
 		}
-
+		
 		/* mark start, then find end of word */
 		start = cp;
 		len = 1;
+
 		while( *++cp != '\0' && !( is_delim( *cp)))
 			len++;
+
+		/* add a new string into args */
 		args[argnum++] = newstr( start, len);
 	}
+
 	args[argnum] = NULL;
 	return args;
 }
@@ -118,7 +139,7 @@ char *newstr( char *s, int l)
 	char *rv = emalloc(l+1);
 
 	rv[l] = '\0';
-	strncpy(rv, s, l);
+	strncpy(rv, s, l);/* copy string from position in s to s+l to rv */
 
 	return rv;
 }
@@ -132,11 +153,15 @@ void freelist( char **list)
 {
 	char **cp = list;
 	while( *cp)
-		free( *cp++);
-	free(list);
+		free( *cp++);/* free every slot */
+	free(list);/* free the list */
 }
 
 void *emalloc(size_t n)
+/*
+ * allocate a memory and return it.
+ *
+ */
 {
 	void *rv;
 	if( (rv = malloc(n)) == NULL )
