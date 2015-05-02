@@ -20,14 +20,14 @@ int main()
 	void setup();
 
 	prompt = DFL_PROMPT;
-	setup();
+	setup();/* close the INT, QUIT signal */
 
-	while( (cmdline = next_cmd(prompt, stdin)) != NULL){
-		if( (arglist = splitline(cmdline)) != NULL){
-			result = execute(arglist);
-			freelist(arglist);
+	while( (cmdline = next_cmd(prompt, stdin)) != NULL){ /* read the cmdline */
+		if( (arglist = splitline(cmdline)) != NULL){ /* split the cmdline into string array */
+			result = execute(arglist);	     /* execute arglist as an line command like shell */
+			freelist(arglist);		     /* when execute done, free the args list */
 		}
-		free(cmdline);
+		free(cmdline);				     /* all is done, free the cmdline buffer */
 	}
 
 	return 0;
