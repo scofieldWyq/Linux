@@ -3,7 +3,7 @@
 ### Hello World 
 
 > every code typing is come from the book that **Understanding Unix/Linux Programing**
-
+> the details is in it.
 
 ##Description:
 - just some practice code.
