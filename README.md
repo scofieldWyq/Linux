@@ -10,6 +10,11 @@
 - for saving some record of my practice.
 - there are many approche that complement something which is in Linux.
 
+##Complie:
+
+- in chapterEight
+	- cc smsh1.c splitline.c execute.c -o smsh1
+	- cc smsh2.c splitline.c execute.c process.c controlflow.c -o smsh2
 
 ##something else	
 
