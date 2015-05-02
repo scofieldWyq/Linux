@@ -12,7 +12,10 @@
 
 ##Complie:
 
-- in chapterEight
+- in chapterEight:
+> a simple bash.
+
+
 	- cc smsh1.c splitline.c execute.c -o smsh1
 	- cc smsh2.c splitline.c execute.c process.c controlflow.c -o smsh2
 
